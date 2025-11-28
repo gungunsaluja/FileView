@@ -37,10 +37,10 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const prevScrollHeightRef = useRef(0);
   
-  // Ref to track current assistant message ID during streaming
+
   const currentAssistantIdRef = useRef<string | null>(null);
 
-  // Handle WebSocket messages
+
   const handleWebSocketMessage = useCallback((message: WebSocketMessage) => {
     switch (message.type) {
       case 'connected':
@@ -48,7 +48,7 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
         break;
 
       case 'thinking':
-        // Show thinking as simple text (not a message bubble)
+       
         setThinkingText(message.content);
         break;
 
@@ -75,7 +75,7 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
             },
           ]);
         } else {
-          // Append streamed content to assistant message
+       
           setMessages((prev) =>
             prev.map((msg) =>
               msg.id === currentAssistantIdRef.current
@@ -88,14 +88,14 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
             )
           );
         }
-        // Keep scroll at bottom during streaming
+        
         if (isAtBottomRef.current && chatContainerRef.current) {
           chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
         break;
 
       case 'done':
-        // Mark message as complete
+     
         if (currentAssistantIdRef.current) {
           setMessages((prev) =>
             prev.map((msg) =>
@@ -111,7 +111,7 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
         break;
 
       case 'error':
-        // Handle error
+        
         setMessages((prev) => [
           ...prev,
           {
@@ -137,7 +137,7 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
     },
   });
 
-  // Scroll to bottom smoothly
+  
   const scrollToBottom = useCallback(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
@@ -147,7 +147,7 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
     }
   }, []);
 
-  // Check if user is at the bottom of the chat
+  
   const checkIsAtBottom = useCallback(() => {
     if (!chatContainerRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
@@ -156,7 +156,7 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
     setShowScrollButton(!atBottom);
   }, []);
 
-  // Listen for scroll events
+
   useEffect(() => {
     const container = chatContainerRef.current;
     if (!container) return;
@@ -164,7 +164,7 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
     return () => container.removeEventListener('scroll', checkIsAtBottom);
   }, [checkIsAtBottom]);
 
-  // Stick to bottom: when messages change, if we were at bottom, stay at bottom
+  
   useLayoutEffect(() => {
     const container = chatContainerRef.current;
     if (!container) return;
@@ -180,7 +180,7 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
     const text = (messageText ?? inputValue).trim();
     if (!text || isWaiting) return;
 
-    // Check connection
+   
     if (!isConnected) {
       connect();
       return;
@@ -196,8 +196,6 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
     setIsWaiting(true);
-
-    // Send message via WebSocket
     sendMessage(text);
   };
 
@@ -212,7 +210,6 @@ const Chat: React.FC<ChatProps> = ({ className = '' }) => {
     const isUser = message.type === 'user';
     const displayText = message.isStreaming ? message.displayContent : message.content;
 
-    // Don't render empty assistant messages (hide the green box while waiting for content)
     if (!isUser && !displayText) {
       return null;
     }
