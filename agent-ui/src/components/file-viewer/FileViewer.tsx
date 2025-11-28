@@ -81,7 +81,7 @@ const FileViewer = () => {
 
   return (
     <div className="flex h-full w-full">
-      {/* Sidebar */}
+      
       <div className="w-72 flex-shrink-0 flex flex-col border-r border-gray-200 bg-slate-50/50">
         <div className="border-b border-gray-200 p-4">
           <div className="flex items-center justify-between">
@@ -108,7 +108,7 @@ const FileViewer = () => {
         </div>
       </div>
 
-      {/* Content */}
+     
       <div className="flex-1 flex flex-col bg-white min-w-0">
         {selectedFile ? (
           <>
